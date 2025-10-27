@@ -215,7 +215,7 @@ sendBtn.addEventListener("click", async () => {
   try {
     const res = await fetch(GAS_URL, {
       method: "POST",
-      headers: { // 🚨 修正点: Content-Typeヘッダーの追加
+      headers: { //  修正点: Content-Typeヘッダーの追加
         'Content-Type': 'application/json' 
       },
       body: JSON.stringify(payload)
