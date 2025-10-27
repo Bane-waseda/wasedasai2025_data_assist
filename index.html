@@ -35,7 +35,7 @@ layout: default
 <body>
   <div class="card">
     <center>
-    <h2>2025早稲田祭販売入力</h2><br>
+    <h2>2025早稲田祭販売入力</h2>
     **訂正する場合は担当者に"訂正"と入力し，スプレッドシートを修正する**
     </center>
   </p>
@@ -182,7 +182,7 @@ layout: default
 const GAS_URL = "https://script.google.com/macros/s/AKfycbx10gIc3WAATEQoAfkB8jqdu5Y5AyBxVzB-UP6s55QeBvO_MvVOhQPR5zYi4SKFvz7_/exec"; // ← ここを差し替えてください
 const MIN_QTY = 1;
 const MAX_QTY = 99;
-const DISCOUNT_RATE = 2/7; // 10%
+const DISCOUNT_RATE = 2/7;
 
 
 /* 要素取得 */
@@ -327,7 +327,7 @@ try {
     document.querySelectorAll(".qty-input").forEach(qi => qi.value = MIN_QTY);
     document.querySelectorAll(".qty-controls button, .qty-input").forEach(el => el.disabled = true);
     discountCheck.checked = false;
-    //venueSelect.value = "";
+    //venueSelect.value = "";   //保持する
     computeTotals();
 
   } catch (err) {
