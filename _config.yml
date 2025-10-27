@@ -1,0 +1,12 @@
+# サイトの基本設定
+title: 販売入力ツール
+description: Google Sheets連携用
+show_downloads: false
+google_analytics: # 必要に応じてGAトラッキングIDを設定
+theme: jekyll-theme-minimal # 必須ではありませんが、テーマを設定すると安心です
+
+# 💡 JekyllにHTMLファイルを処理させるための設定
+# exclude: [".nojekyll"] # .nojekyllを削除した場合、これを追加する必要はありません
+
+# ページファイルを処理の対象とする
+include: ["index.html"]
