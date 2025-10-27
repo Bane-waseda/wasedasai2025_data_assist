@@ -44,6 +44,11 @@ layout: default
         <option value="test">test</option>
       </select>
 
+    <div style="margin-top: 1rem; margin-bottom: 1rem;">
+      <label for="shopper">担当者名：</label>
+      <input type="text" id="shopper" name="shopper" placeholder="名前を入力" style="width: 100%; padding: 0.5rem; border-radius: 6px; border: 1px solid #ddd;">
+    </div>
+
     <!-- 商品行テンプレート -->
     <div class="row product-row" data-item="2025算数" data-price="700">
       <div class="left">
@@ -170,7 +175,7 @@ layout: default
 
 <script>
 /* 設定 */
-const GAS_URL = "https://script.google.com/macros/s/AKfycby5scFvgSRKuR1Ru2oB0Rmiuy5RzzM_2EPDaxcMf1qdA4qyRiU-nUnmzRO1P_Z4IxGU/exec"; // ← ここを差し替えてください
+const GAS_URL = "https://script.google.com/macros/s/AKfycbywvpLQQ52DBNo_MNs82V8SP0ZMHI8TX1IIhriGeHD6u-cX-olk3uyd3ZcREmuFaAAC/exec"; // ← ここを差し替えてください
 const MIN_QTY = 1;
 const MAX_QTY = 99;
 const DISCOUNT_RATE = 2/7; // 10%
@@ -251,6 +256,7 @@ function computeTotals() {
 discountCheck.addEventListener("change", computeTotals);
 
 const venueSelect = document.getElementById("venue");
+const shopperInput = document.getElementById("shopper");
 
 /* 送信処理 */
 sendBtn.addEventListener("click", async () => {
@@ -271,6 +277,12 @@ sendBtn.addEventListener("click", async () => {
   const venue = venueSelect.value;
   if (!venue) {
     alert("開催地を選択してください。");
+    return;
+  }
+
+  const shopper = shopperInput.value.trim();
+  if (!shopper) {
+    alert("担当者名を入力してください。");
     return;
   }
 
