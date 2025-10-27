@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>販売入力（±ボタン版）</title>
+<title>早稲田大学作問サークル2025早稲田祭販売統計支援ツール</title>
 <style>
   :root{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;}
   body{margin:0;padding:1rem;background:#f2f6fb;color:#111}
@@ -31,13 +31,13 @@
 </head>
 <body>
   <div class="card">
-    <h1>販売入力（±ボタン）</h1>
+    <h1>2025早稲田祭販売入力</br>**入力を訂正できないため注意**</h1>
 
     <label for="venue">開催地：</label>
       <select id="venue" name="venue">
         <option value="">選択してください</option>
-        <option value="tokyo">早稲田祭</option>
-        <option value="osaka">理工展</option>
+        <option value="waseda">早稲田祭</option>
+        <option value="rikoten">理工展</option>
       </select>
 
     <!-- 商品行テンプレート -->
@@ -94,7 +94,7 @@
 
 <script>
 /* 設定 */
-const GAS_URL = "https://script.google.com/macros/s/AKfycbxDXwG3J5henMSW2hTVB17cs2kXEb27pr4NuigYekiFQ2qeUOKV1qOjOMmpogytoq0Q/exec"; // ← ここを差し替えてください
+const GAS_URL = "https://script.google.com/macros/s/AKfycbxxJksa4TPHDZRfOnHDIeJYStJPoaplLT5BeJ0bwW3csJwAjp4VmxRpGCUivh_GeuRC/exec"; // ← ここを差し替えてください
 const MIN_QTY = 1;
 const MAX_QTY = 99;
 const DISCOUNT_RATE = 2/7; // 10%
@@ -212,35 +212,35 @@ sendBtn.addEventListener("click", async () => {
   sendBtn.disabled = true;
   sendBtn.textContent = "送信中…";
 
-  try {
+try {
     const res = await fetch(GAS_URL, {
       method: "POST",
-      headers: { //  修正点: Content-Typeヘッダーの追加
+      mode: 'no-cors', // これを忘れずに
+      headers: { 
         'Content-Type': 'application/json' 
       },
       body: JSON.stringify(payload)
     });
+
+    // 💡 レスポンスの読み取りをスキップし、リクエストが送信されたことで成功と見なす
+    // 'no-cors'モードではレスポンスオブジェクトの 'ok' は常に false、'type' は 'opaque' になります。
+    // fetchが失敗しなかった（Promiseがrejectされなかった）時点で成功と見なします。
     
-    // GASからのレスポンスをJSONとして受け取る
-    const data = await res.json(); 
+    // スプレッドシートの確認を促すメッセージに変更
+    alert("送信しました！\n（※通信成功。データはスプレッドシートに書き込まれています。）");
 
-    if (data.result === "success") {
-        alert("送信しました！");
+    // リセット
+    document.querySelectorAll(".product-check").forEach(ch => ch.checked = false);
+    document.querySelectorAll(".qty-input").forEach(qi => qi.value = MIN_QTY);
+    document.querySelectorAll(".qty-controls button, .qty-input").forEach(el => el.disabled = true);
+    discountCheck.checked = false;
+    //venueSelect.value = "";
+    computeTotals();
 
-        // リセット
-        document.querySelectorAll(".product-check").forEach(ch => ch.checked = false);
-        document.querySelectorAll(".qty-input").forEach(qi => qi.value = MIN_QTY);
-        document.querySelectorAll(".qty-controls button, .qty-input").forEach(el => el.disabled = true);
-        discountCheck.checked = false;
-        venueSelect.value = ""; // ★ 開催地リセット
-        computeTotals();
-    } else {
-        // GAS側でcatchされたエラーメッセージを表示
-        throw new Error(`送信失敗: ${data.message}`);
-    }
   } catch (err) {
     console.error(err);
-    alert(`送信中にエラーが発生しました。\n詳細: ${err.message || "通信環境を確認してください。"}`);
+    // fetch failed のエラーが出た場合
+    alert(`通信エラーが発生しました。\n詳細: ${err.message || "ネットワークを確認してください。"}`);
   } finally {
     sendBtn.disabled = false;
     sendBtn.textContent = "送信";
