@@ -33,6 +33,13 @@
   <div class="card">
     <h1>販売入力（±ボタン）</h1>
 
+    <label for="venue">開催地：</label>
+      <select id="venue" name="venue">
+        <option value="">選択してください</option>
+        <option value="tokyo">早稲田祭</option>
+        <option value="osaka">理工展</option>
+      </select>
+
     <!-- 商品行テンプレート -->
     <div class="row product-row" data-item="小" data-price="700">
       <div class="left">
@@ -87,7 +94,7 @@
 
 <script>
 /* 設定 */
-const GAS_URL = "https://script.google.com/macros/s/AKfycbXXXXX/exec"; // ← ここを差し替えてください
+const GAS_URL = "https://script.google.com/macros/s/AKfycbxDXwG3J5henMSW2hTVB17cs2kXEb27pr4NuigYekiFQ2qeUOKV1qOjOMmpogytoq0Q/exec"; // ← ここを差し替えてください
 const MIN_QTY = 1;
 const MAX_QTY = 99;
 const DISCOUNT_RATE = 2/7; // 10%
@@ -166,6 +173,8 @@ function computeTotals() {
 /* 割引チェック時に更新 */
 discountCheck.addEventListener("change", computeTotals);
 
+const venueSelect = document.getElementById("venue");
+
 /* 送信処理 */
 sendBtn.addEventListener("click", async () => {
   const items = [];
@@ -182,11 +191,17 @@ sendBtn.addEventListener("click", async () => {
     return;
   }
 
+  const venue = venueSelect.value;
+  if (!venue) {
+    alert("開催地を選択してください。");
+    return;
+  }
+
   // payload
   const payload = {
+    venue, // ★ 追加
     items,
     discount: discountCheck.checked,
-    // 参考用にクライアント側合計を付加しておく
     clientSubtotal: Number(subtotalEl.textContent.replace(/,/g,'')),
     clientDiscount: Number(discountEl.textContent.replace(/,/g,'')),
     clientTotal: Number(totalEl.textContent.replace(/,/g,''))
@@ -199,20 +214,32 @@ sendBtn.addEventListener("click", async () => {
   try {
     const res = await fetch(GAS_URL, {
       method: "POST",
+      headers: { // 🚨 修正点: Content-Typeヘッダーの追加
+        'Content-Type': 'application/json' 
+      },
       body: JSON.stringify(payload)
     });
-    if (!res.ok) throw new Error("送信失敗: " + res.status);
+    
+    // GASからのレスポンスをJSONとして受け取る
+    const data = await res.json(); 
 
-    alert("送信しました！");
-    // リセット
-    document.querySelectorAll(".product-check").forEach(ch => ch.checked = false);
-    document.querySelectorAll(".qty-input").forEach(qi => qi.value = MIN_QTY);
-    document.querySelectorAll(".qty-controls button, .qty-input").forEach(el => el.disabled = true);
-    discountCheck.checked = false;
-    computeTotals();
+    if (data.result === "success") {
+        alert("送信しました！");
+
+        // リセット
+        document.querySelectorAll(".product-check").forEach(ch => ch.checked = false);
+        document.querySelectorAll(".qty-input").forEach(qi => qi.value = MIN_QTY);
+        document.querySelectorAll(".qty-controls button, .qty-input").forEach(el => el.disabled = true);
+        discountCheck.checked = false;
+        venueSelect.value = ""; // ★ 開催地リセット
+        computeTotals();
+    } else {
+        // GAS側でcatchされたエラーメッセージを表示
+        throw new Error(`送信失敗: ${data.message}`);
+    }
   } catch (err) {
     console.error(err);
-    alert("送信中にエラーが発生しました。通信環境を確認してください。");
+    alert(`送信中にエラーが発生しました。\n詳細: ${err.message || "通信環境を確認してください。"}`);
   } finally {
     sendBtn.disabled = false;
     sendBtn.textContent = "送信";
