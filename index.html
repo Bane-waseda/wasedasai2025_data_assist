@@ -41,6 +41,7 @@ layout: default
         <option value="">選択してください</option>
         <option value="waseda">早稲田祭</option>
         <option value="rikoten">理工展</option>
+        <option value="rikoten">test</option>
       </select>
 
     <!-- 商品行テンプレート -->
@@ -56,9 +57,21 @@ layout: default
       </div>
     </div>
 
-    <div class="row product-row" data-item="2025数学" data-price="700">
+    <div class="row product-row" data-item="2025文系数学" data-price="700">
       <div class="left">
-        <label><input type="checkbox" class="product-check"> <span class="prod-label">2025数学</span></label>
+        <label><input type="checkbox" class="product-check"> <span class="prod-label">2025文系数学</span></label>
+        <div class="price">¥<span class="price-val">700</span> / 個</div>
+      </div>
+      <div class="qty-controls">
+        <button class="qty-btn minus" aria-label="減らす">−</button>
+        <input class="qty-input" type="text" inputmode="numeric" value="1" readonly>
+        <button class="qty-btn plus" aria-label="増やす">＋</button>
+      </div>
+    </div>
+
+    <div class="row product-row" data-item="2025理系数学" data-price="700">
+      <div class="left">
+        <label><input type="checkbox" class="product-check"> <span class="prod-label">2025理系数学</span></label>
         <div class="price">¥<span class="price-val">700</span> / 個</div>
       </div>
       <div class="qty-controls">
@@ -133,7 +146,7 @@ layout: default
 
 <script>
 /* 設定 */
-const GAS_URL = "https://script.google.com/macros/s/AKfycbzfhLcYZDE6qbeiGnTtoDSK4zWqDiYu8SRnUwZ4RTvliCJ7-zHNOe0gVymaMn_g_Va-/exec"; // ← ここを差し替えてください
+const GAS_URL = "https://script.google.com/macros/s/AKfycbwj9l9oZ69LrxTNiPq0rZ1Gtcg_8Vt3A24tBTOsIGwQ2BMehebRTipOtJ7sgdx5cYw6/exec"; // ← ここを差し替えてください
 const MIN_QTY = 1;
 const MAX_QTY = 99;
 const DISCOUNT_RATE = 2/7; // 10%
