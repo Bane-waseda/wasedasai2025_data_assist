@@ -175,7 +175,7 @@ layout: default
 
 <script>
 /* 設定 */
-const GAS_URL = "https://script.google.com/macros/s/AKfycbywvpLQQ52DBNo_MNs82V8SP0ZMHI8TX1IIhriGeHD6u-cX-olk3uyd3ZcREmuFaAAC/exec"; // ← ここを差し替えてください
+const GAS_URL = "https://script.google.com/macros/s/AKfycbx10gIc3WAATEQoAfkB8jqdu5Y5AyBxVzB-UP6s55QeBvO_MvVOhQPR5zYi4SKFvz7_/exec"; // ← ここを差し替えてください
 const MIN_QTY = 1;
 const MAX_QTY = 99;
 const DISCOUNT_RATE = 2/7; // 10%
@@ -294,7 +294,7 @@ sendBtn.addEventListener("click", async () => {
     clientSubtotal: Number(subtotalEl.textContent.replace(/,/g,'')),
     clientDiscount: Number(discountEl.textContent.replace(/,/g,'')),
     clientTotal: Number(totalEl.textContent.replace(/,/g,'')),
-    shopper
+    shopper,
   };
 
   // UIロック
@@ -316,7 +316,7 @@ try {
     // fetchが失敗しなかった（Promiseがrejectされなかった）時点で成功と見なします。
     
     // スプレッドシートの確認を促すメッセージに変更
-    alert("送信しました！\n（※通信成功。データはスプレッドシートに書き込まれています。）");
+    alert("送信しました！\n（※通信成功。データはスプレッドシートに書き込まれています。）\n♡訂正用紙を渡すことを忘れずに♡");
 
     // リセット
     document.querySelectorAll(".product-check").forEach(ch => ch.checked = false);
