@@ -293,7 +293,8 @@ sendBtn.addEventListener("click", async () => {
     discount: discountCheck.checked,
     clientSubtotal: Number(subtotalEl.textContent.replace(/,/g,'')),
     clientDiscount: Number(discountEl.textContent.replace(/,/g,'')),
-    clientTotal: Number(totalEl.textContent.replace(/,/g,''))
+    clientTotal: Number(totalEl.textContent.replace(/,/g,'')),
+    shopper
   };
 
   // UIロック
