@@ -192,11 +192,11 @@ layout: default
 
 <script>
 /* 設定 */
-const GAS_URL = "https://script.google.com/macros/s/AKfycbzoxjTv8sQpyvDDiVXBi7jmfUFjv54knJBAnNi9tdEpOEhZQCy0jnzdqATN_o50mhln/exec"; // ← ここを差し替えてください
+const GAS_URL = "https://script.google.com/macros/s/AKfycbyNvRQ1EM8iAprmHVdGB5CUTpaavNQezYhLr1znyHl7b9-3z4OwGaMqaI4BMw50vFEo/exec"; // ← ここを差し替えてください
 const MIN_QTY = 1;
 const MAX_QTY = 99;
 const DISCOUNT_RATE = 2/7;
-
+const CHS = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8";
 
 /* 要素取得 */
 const productRows = Array.from(document.querySelectorAll(".product-row"));
@@ -207,6 +207,22 @@ const statusEl = document.getElementById("status");
 const sendBtn = document.getElementById("sendBtn");
 const discountCheck = document.getElementById("discount");
 const passwordInput = document.getElementById("password");
+
+/* 💡 ハッシュ化関数 (Web Crypto APIを使用) */
+async function hashPassword(password) {
+  if (!window.crypto || !window.crypto.subtle) {
+    // 古いブラウザなど、APIがない場合はエラーを投げる
+    throw new Error("Web Crypto APIがサポートされていません。");
+  }
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password);
+  // SHA-256でハッシュ値を計算
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  // バッファを16進数文字列に変換
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  return hashHex;
+}
 
 /* 初期化：数量コントロールとチェック動作 */
 productRows.forEach(row => {
@@ -312,6 +328,20 @@ sendBtn.addEventListener("click", async () => {
   const password = passwordInput.value.trim();
   if (!password) {
     alert("パスワードを入力してください。");
+    return;
+  }
+
+  // 💡 HTML内でパスワード認証を実行
+  try {
+    const inputHash = await hashPassword(password);
+    
+    if (inputHash !== CHS) {
+      // ★ 認証失敗を即座に検知しアラート
+      alert("認証失敗！\nパスワードが不正です。");
+      return; 
+    }
+  } catch (e) {
+    alert(`パスワードの処理中にエラーが発生しました: ${e.message}`);
     return;
   }
 
