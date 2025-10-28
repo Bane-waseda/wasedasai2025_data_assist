@@ -53,6 +53,13 @@ layout: default
       <input type="text" id="shopper" name="shopper" placeholder="名前を入力" style="width: 100%; padding: 0.5rem; border-radius: 6px; border: 1px solid #ddd;">
     </div>
 
+    <!-- password -->
+    <div style="margin-top: 0.5rem; margin-bottom: 1rem;">
+      <label for="password"><b>パスワード：</b></label>
+      <input type="password" id="password" name="password" placeholder="パスワードを入力" 
+        style="width: 100%; padding: 0.5rem; border-radius: 6px; border: 1px solid #ddd;">
+    </div>
+
     <!-- 商品行テンプレート -->
     <div class="row product-row" data-item="2025算数" data-price="700" style="background-color:#e6f7ff; color: #999900">
       <div class="left">
@@ -199,6 +206,7 @@ const totalEl = document.getElementById("total");
 const statusEl = document.getElementById("status");
 const sendBtn = document.getElementById("sendBtn");
 const discountCheck = document.getElementById("discount");
+const passwordInput = document.getElementById("password");
 
 /* 初期化：数量コントロールとチェック動作 */
 productRows.forEach(row => {
@@ -301,6 +309,12 @@ sendBtn.addEventListener("click", async () => {
     return;
   }
 
+  const password = passwordInput.value.trim();
+  if (!password) {
+    alert("パスワードを入力してください。");
+    return;
+  }
+
   // payload
   const payload = {
     venue, // ★ 追加
@@ -310,6 +324,7 @@ sendBtn.addEventListener("click", async () => {
     clientDiscount: Number(discountEl.textContent.replace(/,/g,'')),
     clientTotal: Number(totalEl.textContent.replace(/,/g,'')),
     shopper,
+    password,
   };
 
   // UIロック
