@@ -296,6 +296,11 @@ sendBtn.addEventListener("click", async () => {
     return;
   }
 
+  if (shopper.startsWith("=")) {
+    alert("!!警告：悪意のある文字列を検知しました!!");
+    return;
+  }
+
   // payload
   const payload = {
     venue, // ★ 追加
