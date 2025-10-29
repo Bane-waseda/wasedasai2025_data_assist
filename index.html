@@ -6,7 +6,7 @@ layout: default
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>早稲田大学作問サークル2025早稲田祭販売統計支援ツール</title>
+<title>早稲田大学作問サークル2025早稲田祭販売統計支援ツール(開発版)</title>
 <style>
   :root{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;}
   body{margin:0;padding:1rem;background:#f2f6fb;color:#111}
@@ -192,11 +192,10 @@ layout: default
 
 <script>
 /* 設定 */
-const GAS_URL = "https://script.google.com/macros/s/AKfycbxxIUbOUetPxn0zZrLQSBwqX-wnit-I7zWYYQ_jJV6bUksmVRVs9nPFgeeU59aZ1wSi/exec"; // ← ここを差し替えてください
+const GAS_URL = "";
 const MIN_QTY = 1;
 const MAX_QTY = 99;
 const DISCOUNT_RATE = 2/7;
-const CHS = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8";
 
 /* 要素取得 */
 const productRows = Array.from(document.querySelectorAll(".product-row"));
@@ -207,22 +206,6 @@ const statusEl = document.getElementById("status");
 const sendBtn = document.getElementById("sendBtn");
 const discountCheck = document.getElementById("discount");
 const passwordInput = document.getElementById("password");
-
-/* 💡 ハッシュ化関数 (Web Crypto APIを使用) */
-async function hashPassword(password) {
-  if (!window.crypto || !window.crypto.subtle) {
-    // 古いブラウザなど、APIがない場合はエラーを投げる
-    throw new Error("Web Crypto APIがサポートされていません。");
-  }
-  const encoder = new TextEncoder();
-  const data = encoder.encode(password);
-  // SHA-256でハッシュ値を計算
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-  // バッファを16進数文字列に変換
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-  return hashHex;
-}
 
 /* 初期化：数量コントロールとチェック動作 */
 productRows.forEach(row => {
@@ -331,20 +314,6 @@ sendBtn.addEventListener("click", async () => {
     return;
   }
 
-  // 💡 HTML内でパスワード認証を実行
-  try {
-    const inputHash = await hashPassword(password);
-    
-    if (inputHash !== CHS) {
-      // ★ 認証失敗を即座に検知しアラート
-      alert("認証失敗！\nパスワードが不正です。");
-      return; 
-    }
-  } catch (e) {
-    alert(`パスワードの処理中にエラーが発生しました: ${e.message}`);
-    return;
-  }
-
   // payload
   const payload = {
     venue, // ★ 追加
@@ -362,6 +331,8 @@ sendBtn.addEventListener("click", async () => {
   sendBtn.textContent = "送信中…";
 
 try {
+  // 開発版アーカイブのため，送信ロジックを停止
+  /*
     const res = await fetch(GAS_URL, {
       method: "POST",
       mode: 'no-cors', // これを忘れずに
@@ -370,13 +341,14 @@ try {
       },
       body: JSON.stringify(payload)
     });
+    */
 
     // 💡 レスポンスの読み取りをスキップし、リクエストが送信されたことで成功と見なす
     // 'no-cors'モードではレスポンスオブジェクトの 'ok' は常に false、'type' は 'opaque' になります。
     // fetchが失敗しなかった（Promiseがrejectされなかった）時点で成功と見なします。
     
     // スプレッドシートの確認を促すメッセージに変更
-    alert("送信しました！\n（※通信成功。データはスプレッドシートに書き込まれています。）\n♡訂正用紙を渡すことを忘れずに♡");
+    alert("送信しました！\n（※通信成功。データはスプレッドシートに書き込まれています。：：開発版アーカイブのため送信しません）\n♡訂正用紙を渡すことを忘れずに♡");
 
     // リセット
     document.querySelectorAll(".product-check").forEach(ch => ch.checked = false);
